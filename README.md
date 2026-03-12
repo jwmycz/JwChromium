@@ -1,74 +1,200 @@
-# 基于电力交易业务定制 Chromium 浏览器
+[基于电力交易业务定制的 Chromium 浏览器](https://mp.weixin.qq.com/s/J4HVe_x2va6FwFc3XQP5IQ)
 
-## 📋 项目简介
+[基于电力交易业务定制的 Chromium 浏览器(更新)]([微信公众平台](https://mp.weixin.qq.com/s/ElsjrzJeNQetzwp6V2EwOQ))
 
-基于电力交易业务场景定制的 Chromium 浏览器，融合了业务功能与开发工具特性，提供安全、高效、稳定的浏览体验。
+---
+#  本次更新
+
+###  标签页隔离优化
+
+- **优化独立标签页 Tab**
+    
+- **修复部分情况下上下文混用的问题**
+    
+- **提升多账号同时运行的稳定性**
+    
 
 ---
 
-## 🎯 核心功能
+##  新增 `document.jwcook()` API
 
-### 🏢 业务场景功能
+新增浏览器内置函数：
 
-#### 账号隔离管理
-- ✅ **标签页独立 Cookies**：不同标签页拥有独立的 Cookie 环境
-- ✅ **多账号共存**：配合自动登录插件，实现完美便捷的账号切换
-- ✅ **隔离演示**：支持多账号同时在线操作
+`document.jwcook()`
 
-  ![账号隔离演示站点](img/d677b899-205d-42c2-9834-fd0d181898af.png)
+### 功能
 
-#### 安全与稳定性
-- ✅ **最新内核**：采用 Chromium 144 最新内核，增强安全性
-- ✅ **启动鉴权**：加密启动鉴权机制，支持自定义配置使用时间
+- 获取 **HttpOnly Cookie**
+    
+- 可用于调试或自动化场景
+    
 
-### 👨‍💻 开发场景功能
+### 示例
 
-#### 反检测能力
-- ✅ **开发者工具检测**：完美过掉 ldvmp 的开发者工具检测
-  - 检测站点：`https://www.ldvmp.com/`
+![f7e63e43-c464-4204-8c72-3d42f4927dbf.png](https://raw.githubusercontent.com/jwmycz/PicDown/master/gzh/2026/f7e63e43-c464-4204-8c72-3d42f4927dbf.png)	![[image-20260310141831631.png]]
+
+##  新增 `window.JwXMLHttpRequest`
+
+新增增强版 `XMLHttpRequest`
+
+`new JwXMLHttpRequest()`
+
+### 功能
+
+- 可选择 **拦截请求响应**
+    
+- 与原生 `XMLHttpRequest` 保持兼容
+    
+
+### 参数说明
+
+|参数|说明|
+|---|---|
+|`open=true`|开启响应拦截|
+|`open=false`|等同原生 XMLHttpRequest|
+
+### 示例代码
+```
+const data = JSON.stringify({});  
   
-  ![开发者检测](img/24fb7ae4-7427-42ed-b33e-39e58a771d46.png)
-  ![开发者检测1](img/5f8e2315-6398-436f-8264-5157be2ebd13.png)
-  ![开发者检测2](img/1847a38f-5253-4f67-bc49-451ef49c5cfe.png)
-  ![开发者检测3](img/647a3682-815b-4fde-9b5b-9c3d44ce4363.png)
+let xhr = new JwXMLHttpRequest();  
+xhr.withCredentials = true;  
+  
+// open 为 true 时拦截响应  
+xhr.open('POST','',true);  
+  
+xhr.setRequestHeader('Accept', 'application/json, text/plain, */*');  
+xhr.setRequestHeader('Accept-Language', 'zh-CN,zh;q=0.9');  
+  
+xhr.onload = function() {  
+    console.log(xhr.responseText);  
+};  
+  
+xhr.send(data);
+```
 
-#### 调试增强
-- ✅ **调试保护**：删除 debugger 关键字
-- ✅ **新增关键字**：增加 debugering 关键字
-- ✅ **日志保存**：默认保存 console 日志为 chromium 目录下的 hooklog.txt
+示例截图：
+
+![51c94841-a448-4c40-bae8-4fa435b5baac.png](https://raw.githubusercontent.com/jwmycz/PicDown/master/gzh/2026/51c94841-a448-4c40-bae8-4fa435b5baac.png)	![[image-20260310142255777.png]]
+
+
+##  新增 WebSocket 转发
+
+支持 **WebSocket 请求与响应转发到外部端口**
+
+### 特性
+
+- 实时数据转发
+    
+- 支持请求与响应 **拦截**
+    
+- 可对数据进行分析或修改
+    
+
+示例：
+
+![721cca2d-dac6-462b-b7ee-d927c83e7113.png](https://raw.githubusercontent.com/jwmycz/PicDown/master/gzh/2026/721cca2d-dac6-462b-b7ee-d927c83e7113.png)
+
+
+#  原有核心能力
+
+##  账号隔离管理
+
+（持续优化中）
+
+### 标签页级 Cookie 隔离
+
+- 每个标签页拥有 **独立 Cookie / Storage**
+
+
+示例：
+
+![02829a23f184cbc40ecc063380a2dd0d.png](https://raw.githubusercontent.com/jwmycz/PicDown/master/gzh/2026/02829a23f184cbc40ecc063380a2dd0d.png)
+
+### 多账号同时在线
+
+- 同域名支持 **多账号并行操作**
+    
+- 互不污染
+
+示例：
+
+![21861d8a8aa073ddfe604b633f703e90.png](https://raw.githubusercontent.com/jwmycz/PicDown/master/gzh/2026/21861d8a8aa073ddfe604b633f703e90.png)
+
+### 自动登录插件适配
+
+- 支持自动登录插件
+    
+- 快速账号切换
+    
+---
+
+## 🔒 安全与稳定性
+
+### 启动鉴权机制
+
+- 启动时 **加密校验**
+    
+- 支持 **使用时间 / 周期限制**
+    
+
+### Chromium 内核
+
+- 基于 **Chromium 144**
+    
+- 与主流浏览器行为保持一致
+    
 
 ---
 
-## 📅 开发计划
+##  调试与反检测能力
 
-### 近期计划
-#### 业务支持
-- ⏳ **HTTP 账号密码代理**
-- ⏳ **WebSocket 转发**
-- ⏳ **Cookies 明文存储**
-#### 开发支持
-- ⏳ **Console 保存配置**
+- **Debugger 关键字智能处理**
+    
+- 新增 `debugering` 关键字适配
+    
 
-### 未来计划
-- 🔮 **单 Tab 页指纹配置**
-- 🔮 **单 Tab 页代理配置**
+### Console 日志自动落盘
+
+日志位置：
+
+./hooklog.txt
+
+### 调试支持
+
+在 **反检测模式开启时**
+
+仍可正常进行调试
+
 ---
 
-## 🚀 技术优势
+#  应用场景
 
-- **性能优异**：基于最新 Chromium 内核，运行流畅
-- **稳定运行**：强大的反检测能力，确保业务稳定开展
+### 多账号管理
+
+同时登录多个账号，避免关联检测
+
+### 安全访问
+
+保护账号环境，降低风控风险
+
+### 开发调试
+
+提供稳定、安全的调试环境
 
 ---
 
-## 💡 应用场景
+#  下载地址
 
-- **电力交易自动化**：配合脚本实现自动化交易操作
-- **多账号管理**：同时登录多个账号，高效切换操作
-- **安全访问**：保护账号信息，防止关联检测
-- **开发调试**：安全稳定的开发环境，避免检测干扰
+JwChromium
 
-`链接: https://pan.baidu.com/s/18O8QSzI8iYquzBiE1VFG1w?pwd=jwcz`
+百度网盘：
 
-使用建议：增加--user-data-dir="C:\chromium" 参数避免环境污染
+链接: https://pan.baidu.com/s/18O8QSzI8iYquzBiE1VFG1w  
+提取码: jwcz
 
+---
+
+<span style="color:#999;font-size:12px">
+求职：有合适的爬虫岗位欢迎内推，主要意向电力辅助行业，其余也可。base:北京，西安，成都
+</span>
